@@ -6,8 +6,9 @@
 const int WIDTH = 800;
 const int HEIGHT = 800;
 
-void drawscr(SDL_Renderer* &renderer, int &i, double &x, double &y, double &dx, double &dy, int* color)
+void drawscr(SDL_Renderer* &renderer, double &x, double &y, double &dx, double &dy, int* color)
 {
+	static int i = 0;
 	SDL_RenderDrawLine(renderer, 10*x+WIDTH/2, -10*y+HEIGHT/2, 10*(x+dx)+WIDTH/2, -10*(y+dy)+HEIGHT/2);
 	SDL_SetRenderDrawColor(renderer, color[0], color[1], color[2], 255);
 	//Rendering less lines for huge speedup while still being accurate
@@ -15,7 +16,7 @@ void drawscr(SDL_Renderer* &renderer, int &i, double &x, double &y, double &dx, 
 		SDL_RenderPresent(renderer);
 		SDL_Delay(10); //Delay to stop flickering
 		i = 0;
-	}
+	} i++;
 
 }
 
@@ -45,26 +46,25 @@ int main(void)
 	double z = 1.0;
 	double a = 10;
 	double b = 28;
-	double c = (double) 8/3;
+	double c = static_cast<double>(8)/3;
 	double dt = 0.001;
-	int i = 0;
-	int color[3] = {64, 64, 64};
+	int color[3] = {64, 64, 64}; //{r, g, b}
 
 	
-	for (double t = 0 ;; t += dt, i++) {
+	for (double t = 0 ;; t += dt) {
 		if (SDL_PollEvent(&event) && event.type == SDL_QUIT) break;
 		double dx = (a * (y - x))*dt;
 		double dy = (x * (b - z) - y)*dt;
 		double dz = (x * y - c * z)*dt;
 		std::cout << std::fixed << x << " " <<  y << " " << z << " " << t << std::endl;
 		colorit(color, dx, dy, dz);
-		drawscr(renderer, i, x, y, dx, dy, color);
+		drawscr(renderer, x, y, dx, dy, color);
 		x = x + dx;
 		y = y + dy;
 		z = z + dz;
 	}
 
-	SDL_DestroyRenderer(renderer);
-	SDL_DestroyWindow(window);
+	SDL_DestroyRenderer(renderer); renderer = nullptr;
+	SDL_DestroyWindow(window); window = nullptr;
 	SDL_Quit();
 }

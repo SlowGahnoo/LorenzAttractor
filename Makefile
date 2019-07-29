@@ -1,6 +1,6 @@
 CC := g++
 
-CFLAGS := `sdl2-config --libs --cflags` -Wall -Wextra -Wshadow
+CFLAGS := `sdl2-config --libs --cflags` -Werror -Wall -Wextra -Wshadow -Wsign-conversion -pedantic-errors
 
 OPT := -O2
 
