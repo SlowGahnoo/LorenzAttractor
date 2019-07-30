@@ -1,12 +1,11 @@
-#include <iostream>
-#include <iomanip>
+#include <cstring>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_timer.h>
 
 const int WIDTH = 800;
 const int HEIGHT = 800;
 
-void drawscr(SDL_Renderer* &renderer, double &x, double &y, double &dx, double &dy, int* color)
+void drawscr(SDL_Renderer* &renderer, double x, double y, double dx, double dy, int* color)
 {
 	static int i = 0;
 	SDL_RenderDrawLine(renderer, 10*x+WIDTH/2, -10*y+HEIGHT/2, 10*(x+dx)+WIDTH/2, -10*(y+dy)+HEIGHT/2);
@@ -20,7 +19,7 @@ void drawscr(SDL_Renderer* &renderer, double &x, double &y, double &dx, double &
 
 }
 
-void colorit(int *color, double &dx, double &dy, double &dz)
+void colorit(int *color, double dx, double dy, double dz)
 {
 	if (dy >= 0.01 || dy <=-0.01) {color[0]++; color[1]--; color[2]--;}
 	if (dx >= 0.01 || dx <=-0.01) {color[0]--; color[1]++; color[2]--;}
@@ -56,7 +55,7 @@ int main(void)
 		double dx = (a * (y - x))*dt;
 		double dy = (x * (b - z) - y)*dt;
 		double dz = (x * y - c * z)*dt;
-		std::cout << std::fixed << x << " " <<  y << " " << z << " " << t << std::endl;
+		printf("%f %f %f %f\n", x, y, z, t);
 		colorit(color, dx, dy, dz);
 		drawscr(renderer, x, y, dx, dy, color);
 		x = x + dx;
